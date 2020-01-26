@@ -1,0 +1,66 @@
+
+{% extends 'base.html' %}
+{% block content %}
+
+      <div class="d-flex bd-highlight">
+        <div class="p-5 w-25 bd-highlight">
+            <h3>{{user.username}}</h3>
+            <h6>email: {{user.email}}</h6>
+                        {% if current_user.is_authenticated %}
+                          {% if user != current_user %}
+                            {% if not user in current_user.following() %}
+                              <a href="{{ url_for('follow', username = user.username) }}" class="small">Follow</a>
+                            {% else %}
+                              <a href="{{ url_for('unfollow', username = user.username) }}" class="small">Unfollow</a>
+                            {% endif %}
+                          {% endif %}
+                        {% endif %}
+		                  
+                  <h5>Posts</h5>
+                  <p>{{ user.posts.count() }}</p>
+                
+                  <h5>Followers</h5>	
+                  <p>{{ user.followers().count() }}</p>
+                
+                  <h5>Following</h5>
+                  <p>{{ user.following().count() }}</p>
+                
+        </div>
+        <div class="p-5 w-100 bd-highlight">
+             <div class="align-self-baseline">
+             {% if stream %}
+                        {% for post in stream%}
+                            
+                            <div class="card">
+                            <div class="card-header">
+                            <h4> <a href="{{ url_for('profile', username=post.user.username) }}">{{post.user.username}}</a></h4>
+                            <time date-time="{{ post.timestamp }}" class="disTime" datetime="{{ post.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}">{{post.timestamp.strftime('%Y-%m-%d %H:%M:%S')}}</time>
+                            </div>
+                            <div class="card-body">
+                                <blockquote class="blockquote mb-0">
+                                <p>{{ post.content }}</p>
+                                {% if current_user.id == post.user.id %}
+                                <footer class="footer">
+                                 <h6><a href="{{ url_for('delete_post', post_id = post.id) }}" > delete </a>
+                                  &nbsp &nbsp
+                                 <a href="{{ url_for('edit_post', post_id = post.id) }}" > edit </a></h6>
+                                </footer>
+                                {% endif %}
+                                </blockquote>
+                            </div>
+                            </div>
+                        {% endfor%}
+                {% else %}
+                  <p>There are not Posts yet</p>
+                {% endif %}
+            </div>
+        </div>
+        <div class="p-5 w-25 bd-highlight">
+
+        </div>
+        </div>
+
+      {% endblock  %}
+ 
+
+ 

@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+    {% block nav %}
+       <li class="nav-item">
+         {% if current_user.is_authenticated %}
+          <a type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal"  >
+            create new Post
+          </a>
+         {% endif %} 
+      </li>
+    {% endblock  %}
+    {% block content %}
+        
+
+        <div class="d-flex bd-highlight">
+        <div class="p-5 w-25 bd-highlight">
+            <div class="card">
+                <div class="card-header">
+                  <h4>Users</h4>
+                </div>
+                {% for user in user %}
+                  <div class="card-body">
+                      <h5><a href="{{ url_for('profile', username=user.username) }}">{{user.username}}</a> </h5>
+                  </div>
+                {% endfor %}
+                
+                
+            </div>
+        </div> 
+        <div class="p-5 w-100 bd-highlight">
+             <div class="align-self-baseline">
+                <div class="card-body">
+                <h5>Posts</h5>
+                </div>
+                    {% for post in stream %}
+                        <div class="card">
+                          <div class="card-header">
+                            <h4> <a href="{{ url_for('profile', username=post.user.username) }}">{{post.user.username}}</a></h4>
+                            <time date-time="{{ post.timestamp }}" class="disTime" datetime="{{ post.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}">{{post.timestamp.strftime('%Y-%m-%d %H:%M:%S')}}</time>
+                          </div>
+                          <div class="card-body">
+                              <blockquote class="blockquote mb-0">
+                              <p>{{ post.content }}</p>
+                              </blockquote>
+                          </div>
+                        </div>
+                    {% endfor%}  
+            </div>
+        </div>
+        <div class="p-5 30 bd-highlight"></div>
+        </div>
+        
+        
+
+                 <!-- Modal -->
+              <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">Create a new post</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                        <form method="POST" action="">
+                            <div class="modal-body">
+                              {{ form.hidden_tag() }}
+                              {% for field in form %}
+                                {{ render_field(field) }}
+                              {% endfor %}
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                              <button type="submit" id="submit" class="btn btn-primary">Save changes</button>
+                            </div>
+                        </form>
+                  </div>
+                </div>
+              </div>
+
+
+      {% endblock  %}
+
+
